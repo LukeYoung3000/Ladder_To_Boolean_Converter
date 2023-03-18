@@ -3,7 +3,9 @@
 #include <map>
 #include <set>
 #include <stack>
+#include <cmath>
 
+using namespace std;
 
 /*		Example: Test
 
@@ -47,8 +49,9 @@
 
 		Boolean Equation
 
-		Output = (A & !B & !C & D) | (A & !B & C & !D) | (A & !B & C & D) | (A & B & C & !D) | (A & B & C & D)
+		Output =	(A & !B & !C & D) | (A & !B & C & !D) | (A & !B & C & D) | (A & B & C & !D) | (A & B & C & D)
 
+					(A & !B & !C & D) | (A & !B & C & !D) | (A & !B & C & D) | (A & B & C & !D) | (A & B & C & D)
 	*/
 
 
@@ -140,6 +143,7 @@ public:
 		if (input_states.size() != inputs_.size())
 		{
 			// Error
+			cout << "Error 1 " << endl;
 		}
 
 		// Create Input Name To State Mapping
@@ -155,10 +159,12 @@ public:
 
 			if (input_states_.count(block->name_))
 				block->CalculatePath(input_states_[block->name_]);
+			else
+				block->CalculatePath(false);
 		}
 			
 
-		// Traverse The Block From Left To Right
+		// Traverse The Blocks From Left To Right
 		// Checking All Paths Along The Way
 
 		std::stack<LadderLogicBlock*> process;
@@ -191,7 +197,7 @@ public:
 			}
 
 			// Look for the next block to jump to
-			LadderLogicBlock* next_block = GetNextBlock(process.top());
+			LadderLogicBlock* next_block = GetNextUncheckedBlock(process.top());
 
 			// No next block available
 			if (next_block == nullptr)
@@ -208,9 +214,25 @@ public:
 		return result;
 	}
 
-	LadderLogicBlock* GetNextBlock(LadderLogicBlock* current_block)
+	LadderLogicBlock* GetNextUncheckedBlock(LadderLogicBlock* current_block)
 	{
-		// Complete this function
+		
+		// Loop Through All Next Connected Blocks In "next_row_"
+		for (int i = 0; i < current_block->next_row_.size(); i++)
+		{
+			uint16_t next_col = current_block->col_ + 1;
+			uint16_t next_row = current_block->next_row_[i];
+
+			for (int j = 0; j < blocks_.size(); j++)
+			{
+				if (blocks_[j].col_ == next_col && \
+					blocks_[j].row_ == next_row && \
+					blocks_[j].is_checked_ahead == false)
+				{
+					return &blocks_[j];
+				}
+			}
+		}
 
 		return nullptr;
 	}
@@ -256,6 +278,8 @@ public:
 class LadderLogicTruthTableGenerator
 {
 
+public:
+
 	std::vector<LadderLogicEquation> ladder_logic_equations_;
 	std::vector<TruthTable> truth_tables_;
 	std::vector<std::string> boolean_equations_;
@@ -271,7 +295,9 @@ class LadderLogicTruthTableGenerator
 			// Test All Input Combinations To LadderLogicEquation
 			// Store Results In TruthTable
 			tt.input_names_ = lle.inputs_;
-			uint32_t num_input_combinations = 2 ^ tt.input_names_.size() - 1;
+			uint32_t num_input_combinations = pow(2, tt.input_names_.size());
+			cout << "Num Combinations: " << num_input_combinations << endl;
+
 			for (uint32_t i = 0; i < num_input_combinations; i++)
 			{
 				// To Do: Add code to time how log it takes to execute all combinations of input states
@@ -279,7 +305,7 @@ class LadderLogicTruthTableGenerator
 				// Execute LadderLogicEquation For This Current Set Of Input States
 				std::vector<bool> input_states;
 				for (uint32_t j = 0; j < lle.inputs_.size(); j++)
-					input_states.push_back((i >> j) & 0x1);
+					input_states.push_back( (bool)((i >> j) & (uint32_t)1) );
 				bool lle_result = lle.ExecuteLogic(input_states);
 
 				// Add Data To "TruthTable"
@@ -289,6 +315,8 @@ class LadderLogicTruthTableGenerator
 
 			truth_tables_.push_back(tt);
 		}
+
+		return true;
 	}
 
 
@@ -299,7 +327,7 @@ class LadderLogicTruthTableGenerator
 		{
 
 			std::string boolean_equation_string = "";
-			for (uint32_t i = 0; tt->output_states_.size(); i++)
+			for (uint32_t i = 0; i < tt->output_states_.size(); i++)
 			{
 				if (tt->output_states_[i] == false)
 					continue;
