@@ -3,6 +3,7 @@
 
 #include "Ladder_To_Boolean_Converter.h"
 #include "LadderLogicObjects.h"
+#include "LadderLogicConfig.h"
 
 using namespace std;
 
@@ -34,7 +35,8 @@ int main()
 
 
 
-
+	LadderLogicConfig ll_config;
+	ll_config.LoadConfig("test.xml");
 
 
 

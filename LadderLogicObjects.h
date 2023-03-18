@@ -58,10 +58,6 @@ using namespace std;
 
 
 
-class LadderLogicConfig
-{
-
-};
 
 class LadderLogicBlock
 {
