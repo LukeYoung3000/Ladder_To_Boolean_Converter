@@ -43,10 +43,12 @@ public:
 			for (pugi::xml_node blk = eq.child("block"); blk; blk = blk.next_sibling("block"))
 			{
 				Block block;
-				block.name_ = blk.attribute("name").value();
-				block.row_ = blk.attribute("row").as_int();
-				block.col_ = blk.attribute("col").as_int();
-				block.type_ = blk.attribute("type").value();
+				block.name_ = blk.child("name").text().get();
+				block.row_ = blk.child("row").text().as_int(-1);
+				block.col_ = blk.child("col").text().as_int(-1);
+				block.type_ = blk.child("type").text().get();
+				for (pugi::xml_node next_row = blk.child("next_row"); next_row; next_row = next_row.next_sibling("next_row"))
+					block.next_row_.push_back(next_row.text().as_int(-1));
 
 				equation.blocks_.push_back(block);
 			}
