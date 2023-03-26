@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <vector>
 
 //#include "LadderLogicObjects.h"
 #include "libs/pugixml/src/pugixml.hpp"

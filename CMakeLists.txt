@@ -12,7 +12,18 @@ endif()
 project ("Ladder_To_Boolean_Converter")
 
 # Add source to this project's executable.
-add_executable (Ladder_To_Boolean_Converter "Ladder_To_Boolean_Converter.cpp" "Ladder_To_Boolean_Converter.h" "LadderLogicObjects.h" "LadderLogicConfig.h" "libs/pugixml/src/pugiconfig.hpp" "libs/pugixml/src/pugixml.hpp" "libs/pugixml/src/pugixml.cpp")
+add_executable (
+	Ladder_To_Boolean_Converter
+	"Ladder_To_Boolean_Converter.cpp"
+	"Ladder_To_Boolean_Converter.h"
+	"LadderLogicObjects.h"
+	"LadderLogicConfig.h"
+	"libs/pugixml/src/pugiconfig.hpp"
+	"libs/pugixml/src/pugixml.hpp"
+	"libs/pugixml/src/pugixml.cpp"
+	"LadderLogicObjects.cpp"
+	"TruthTableObjects.h"
+	"TruthTableObjects.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Ladder_To_Boolean_Converter PROPERTY CXX_STANDARD 20)

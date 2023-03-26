@@ -4,6 +4,7 @@
 #include "Ladder_To_Boolean_Converter.h"
 #include "LadderLogicObjects.h"
 #include "LadderLogicConfig.h"
+#include "TruthTableObjects.h"
 
 using namespace std;
 
@@ -70,6 +71,7 @@ int main()
 
 
 	/* Print Blocks
+	* yo
 	for (int i = 0; i < test_equation.blocks_.size(); i++)
 	{
 		cout << "----- Start -----" << endl;
